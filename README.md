@@ -55,3 +55,5 @@ ng version
 ```bash
 ng new project-name
 ```
+
+See [my notes about the discountinued `assets` folder under `src`](playing-cards/public/assets/README.md).
