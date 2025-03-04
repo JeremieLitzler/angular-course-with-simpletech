@@ -57,3 +57,16 @@ ng new project-name
 ```
 
 See [my notes about the discountinued `assets` folder under `src`](playing-cards/public/assets/README.md).
+
+## Create a new component
+
+```bash
+# short form of ng generate component components/playing-card
+ng g c components/playing-card
+```
+
+The above creates a new subfolder `components/playing-card` under `app`. The scaffolded component is defined with the `.css`, `.html`, `ts` and `spec.ts` files.
+
+To skip the test file generation, simply the flag `--skip-tests` on the above command.
+
+

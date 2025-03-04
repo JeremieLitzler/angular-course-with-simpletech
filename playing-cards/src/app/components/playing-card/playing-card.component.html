@@ -1,0 +1,30 @@
+<article id="card">
+  <div class="inside">
+    <header>
+      <div class="left">
+        <div id="name">{{ monster().name }}</div>
+      </div>
+      <div class="right">
+        <div id="hp">{{ monster().hp }} HP</div>
+        <img src="assets/icons/fan.svg" alt="HP Icon" class="energy icon" />
+      </div>
+    </header>
+    <figure>
+      <img src="assets/images/pik.jpg" alt="Monster name" />
+      <figcaption>{{ monster().figureCaption }}</figcaption>
+    </figure>
+    <div id="capacities">
+      <div class="capacity">
+        <div class="main">
+          <div class="cost">
+            <img src="assets/icons/fan.svg" alt="HP Icon" class="icon energy" />
+            <img src="assets/icons/fan.svg" alt="HP Icon" class="icon energy" />
+          </div>
+          <div class="name">{{ monster().attackName }}</div>
+          <div class="damage">{{ monster().attackStrength }}</div>
+        </div>
+        <div class="description">{{ monster().attackDesc }}</div>
+      </div>
+    </div>
+  </div>
+</article>
