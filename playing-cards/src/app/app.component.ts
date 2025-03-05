@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { PlayingCardComponent } from './components/playing-card/playing-card.component';
 import { Monster } from './models/monster.model';
+import { SearchBarComponent } from './components/search-bar/search-bar.component';
 
 //@Component is a decorator
 @Component({
@@ -16,11 +17,13 @@ import { Monster } from './models/monster.model';
   // The CSS styles inline with the TS code
   // styles: '',
   styleUrl: './app.component.css',
-  imports: [PlayingCardComponent],
+  imports: [PlayingCardComponent, SearchBarComponent],
 })
 export class AppComponent {
   // The "!" is used for what?
   pik!: Monster;
+  searchClickCount = 0;
+  searchedTermParent = '';
 
   constructor() {
     this.pik = {
@@ -31,5 +34,9 @@ export class AppComponent {
       attackStrength: 40,
       figureCaption: 'The famous one',
     };
+  }
+
+  increaseCount() {
+    this.searchClickCount++;
   }
 }

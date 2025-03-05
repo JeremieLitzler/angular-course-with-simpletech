@@ -1,3 +1,9 @@
+<app-search-bar
+  (searchButtonClicked)="increaseCount()"
+  [(searchTerm)]="searchedTermParent"
+/>
+<p>Search term: {{ searchedTermParent }}</p>
+<p>Search click count: {{ searchClickCount }}</p>
 <div class="cards">
   <app-playing-card />
   <app-playing-card [monster]="pik" />
