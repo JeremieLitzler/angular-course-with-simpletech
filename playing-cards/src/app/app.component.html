@@ -1,10 +1,4 @@
-<app-search-bar
-  (searchButtonClicked)="increaseCount()"
-  [(searchTerm)]="searchedTermParent"
-/>
-<p>Search term: {{ searchedTermParent }}</p>
-<p>Search click count: {{ searchClickCount }}</p>
+<button (click)="toggleMonster()">Toggle Monster</button>
 <div class="cards">
-  <app-playing-card />
-  <app-playing-card [monster]="pik" />
+  <app-playing-card [monster]="selectedMonster()" />
 </div>

@@ -1,7 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, computed, signal } from '@angular/core';
 import { PlayingCardComponent } from './components/playing-card/playing-card.component';
 import { Monster } from './models/monster.model';
-import { SearchBarComponent } from './components/search-bar/search-bar.component';
+import { MonsterType } from './utils/monster.utils';
 
 //@Component is a decorator
 @Component({
@@ -17,26 +17,47 @@ import { SearchBarComponent } from './components/search-bar/search-bar.component
   // The CSS styles inline with the TS code
   // styles: '',
   styleUrl: './app.component.css',
-  imports: [PlayingCardComponent, SearchBarComponent],
+  imports: [PlayingCardComponent],
 })
 export class AppComponent {
   // The "!" is used for what?
-  pik!: Monster;
+  monsters!: Monster[];
   searchClickCount = 0;
   searchedTermParent = '';
 
+  selectedMonsterIndex = signal<number>(1);
+  selectedMonster = computed<Monster>(
+    () => this.monsters[this.selectedMonsterIndex()],
+  );
+
   constructor() {
-    this.pik = {
+    this.monsters = [];
+    const pik = {
       name: 'Pikachou',
       hp: 100,
-      attackDesc: 'Pikachou strikes !!!',
+      image: 'assets/images/electric.jpg',
+      type: MonsterType.ELECTRIC,
+      attackDesc: 'Pikachou chocks !!!',
       attackName: 'Strike',
       attackStrength: 40,
       figureCaption: 'The famous one',
     };
-  }
+    const car = {
+      name: 'Car',
+      hp: 600,
+      image: 'assets/images/water.jpg',
+      type: MonsterType.WATER,
+      attackDesc: 'Car drowns you !!!',
+      attackName: 'Drown',
+      attackStrength: 50,
+      figureCaption: 'The enemy of Pikachou',
+    };
 
-  increaseCount() {
-    this.searchClickCount++;
+    this.monsters.push(...[pik, car]);
+  }
+  toggleMonster() {
+    this.selectedMonsterIndex.set(
+      (this.selectedMonsterIndex() + 1) % this.monsters.length,
+    );
   }
 }
