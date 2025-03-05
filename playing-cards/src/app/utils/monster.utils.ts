@@ -13,7 +13,7 @@ export interface IMonsterProperties {
 export const MonsterTypeProperties: Record<string, IMonsterProperties> = {
   [MonsterType.PLANT]: {
     iconUrl: 'assets/icons/lucide--tree-pine.svg',
-    color: 'green',
+    color: 'lime',
   },
   [MonsterType.ELECTRIC]: {
     iconUrl: 'assets/icons/lucide--zap.svg',

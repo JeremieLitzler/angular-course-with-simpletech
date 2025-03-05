@@ -1,7 +1,9 @@
-import { Component, computed, signal } from '@angular/core';
+import { Component, computed, model } from '@angular/core';
 import { PlayingCardComponent } from './components/playing-card/playing-card.component';
 import { Monster } from './models/monster.model';
 import { MonsterType } from './utils/monster.utils';
+import { CommonModule } from '@angular/common';
+import { SearchBarComponent } from './components/search-bar/search-bar.component';
 
 //@Component is a decorator
 @Component({
@@ -17,19 +19,16 @@ import { MonsterType } from './utils/monster.utils';
   // The CSS styles inline with the TS code
   // styles: '',
   styleUrl: './app.component.css',
-  imports: [PlayingCardComponent],
+  imports: [CommonModule, PlayingCardComponent, SearchBarComponent],
 })
 export class AppComponent {
   // The "!" is used for what?
   monsters!: Monster[];
-  searchClickCount = 0;
-  searchedTermParent = '';
+  search = model('');
 
-  selectedMonsterIndex = signal<number>(1);
-  selectedMonster = computed<Monster>(
-    () => this.monsters[this.selectedMonsterIndex()],
+  filteredMonsters = computed(() =>
+    this.monsters.filter((monster) => monster.name.includes(this.search())),
   );
-
   constructor() {
     this.monsters = [];
     const pik = {
@@ -44,7 +43,7 @@ export class AppComponent {
     };
     const car = {
       name: 'Car',
-      hp: 600,
+      hp: 60,
       image: 'assets/images/water.jpg',
       type: MonsterType.WATER,
       attackDesc: 'Car drowns you !!!',
@@ -52,12 +51,28 @@ export class AppComponent {
       attackStrength: 50,
       figureCaption: 'The enemy of Pikachou',
     };
+    const bulb = {
+      name: 'Bulb',
+      hp: 80,
+      image: 'assets/images/plant.jpg',
+      type: MonsterType.PLANT,
+      attackDesc: 'Bulb bites you !!!',
+      attackName: 'Bites',
+      attackStrength: 75,
+      figureCaption: 'The dangerous plant',
+    };
 
-    this.monsters.push(...[pik, car]);
-  }
-  toggleMonster() {
-    this.selectedMonsterIndex.set(
-      (this.selectedMonsterIndex() + 1) % this.monsters.length,
-    );
+    const sala = {
+      name: 'Sala',
+      hp: 40,
+      image: 'assets/images/fire.jpg',
+      type: MonsterType.FIRE,
+      attackDesc: 'Sala burns you !!!',
+      attackName: 'Burns',
+      attackStrength: 60,
+      figureCaption: 'Ouch... it is hot!',
+    };
+
+    this.monsters.push(...[pik, car, bulb, sala]);
   }
 }
