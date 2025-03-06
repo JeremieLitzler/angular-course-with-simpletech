@@ -1,9 +1,9 @@
-import { Component, computed, model } from '@angular/core';
+import { Component, computed, inject, model, signal } from '@angular/core';
 import { PlayingCardComponent } from './components/playing-card/playing-card.component';
 import { Monster } from './models/monster.model';
-import { MonsterType } from './utils/monster.utils';
 import { CommonModule } from '@angular/common';
 import { SearchBarComponent } from './components/search-bar/search-bar.component';
+import { MonsterService } from './services/monster/monster.service';
 
 //@Component is a decorator
 @Component({
@@ -22,57 +22,22 @@ import { SearchBarComponent } from './components/search-bar/search-bar.component
   imports: [CommonModule, PlayingCardComponent, SearchBarComponent],
 })
 export class AppComponent {
+  monsterService = inject(MonsterService);
+
   // The "!" is used for what?
-  monsters!: Monster[];
+  monsters = signal<Monster[]>([]);
   search = model('');
 
   filteredMonsters = computed(() =>
-    this.monsters.filter((monster) => monster.name.includes(this.search())),
+    this.monsters().filter((monster) => monster.name.includes(this.search())),
   );
   constructor() {
-    this.monsters = [];
-    const pik = {
-      name: 'Pikachou',
-      hp: 100,
-      image: 'assets/images/electric.jpg',
-      type: MonsterType.ELECTRIC,
-      attackDesc: 'Pikachou chocks !!!',
-      attackName: 'Strike',
-      attackStrength: 40,
-      figureCaption: 'The famous one',
-    };
-    const car = {
-      name: 'Car',
-      hp: 60,
-      image: 'assets/images/water.jpg',
-      type: MonsterType.WATER,
-      attackDesc: 'Car drowns you !!!',
-      attackName: 'Drown',
-      attackStrength: 50,
-      figureCaption: 'The enemy of Pikachou',
-    };
-    const bulb = {
-      name: 'Bulb',
-      hp: 80,
-      image: 'assets/images/plant.jpg',
-      type: MonsterType.PLANT,
-      attackDesc: 'Bulb bites you !!!',
-      attackName: 'Bites',
-      attackStrength: 75,
-      figureCaption: 'The dangerous plant',
-    };
+    this.monsters.set(this.monsterService.getAll());
+  }
 
-    const sala = {
-      name: 'Sala',
-      hp: 40,
-      image: 'assets/images/fire.jpg',
-      type: MonsterType.FIRE,
-      attackDesc: 'Sala burns you !!!',
-      attackName: 'Burns',
-      attackStrength: 60,
-      figureCaption: 'Ouch... it is hot!',
-    };
-
-    this.monsters.push(...[pik, car, bulb, sala]);
+  addMonster() {
+    const genericMonster = new Monster();
+    this.monsterService.add(genericMonster);
+    this.monsters.set(this.monsterService.getAll());
   }
 }

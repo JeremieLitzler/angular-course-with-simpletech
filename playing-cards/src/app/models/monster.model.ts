@@ -1,6 +1,7 @@
 import { MonsterType } from '../utils/monster.utils';
 
 export class Monster {
+  id = -1;
   name = 'Default Monster Name';
   image = 'assets/images/electric.jpg';
   type = MonsterType.ELECTRIC;
@@ -9,4 +10,8 @@ export class Monster {
   attackName = 'Default Attack name';
   attackStrength = 60;
   attackDesc = 'Default Attack description';
+
+  copy(): Monster {
+    return Object.assign(new Monster(), this);
+  }
 }
