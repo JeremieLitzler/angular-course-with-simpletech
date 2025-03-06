@@ -1,7 +1,7 @@
 <app-search-bar [(searchTerm)]="search" />
 <div class="cards">
   @for (monster of filteredMonsters(); track monster) {
-    <app-playing-card [monster]="monster" />
+    <app-playing-card [monster]="monster" (click)="openMonster(monster)" />
   } @empty {
     <p style="text-align: center">No cards found</p>
   }

@@ -20,7 +20,7 @@ export class MonsterService {
     pik.hp = 100;
     pik.image = 'assets/images/electric.jpg';
     pik.type = MonsterType.ELECTRIC;
-    pik.attackDesc = 'Pikachou chocks !!!';
+    pik.attackDescription = 'Pikachou chocks !!!';
     pik.attackName = 'Strike';
     pik.attackStrength = 40;
     pik.figureCaption = 'The famous one';
@@ -31,7 +31,7 @@ export class MonsterService {
     car.hp = 60;
     car.image = 'assets/images/water.jpg';
     car.type = MonsterType.WATER;
-    car.attackDesc = 'Car drowns you !!!';
+    car.attackDescription = 'Car drowns you !!!';
     car.attackName = 'Drown';
     car.attackStrength = 50;
     car.figureCaption = 'The enemy of Pikachou';
@@ -42,7 +42,7 @@ export class MonsterService {
     bulb.hp = 80;
     bulb.image = 'assets/images/plant.jpg';
     bulb.type = MonsterType.PLANT;
-    bulb.attackDesc = 'Bulb bites you !!!';
+    bulb.attackDescription = 'Bulb bites you !!!';
     bulb.attackName = 'Bites';
     bulb.attackStrength = 75;
     bulb.figureCaption = 'The dangerous plant';
@@ -53,7 +53,7 @@ export class MonsterService {
     sala.hp = 40;
     sala.image = 'assets/images/fire.jpg';
     sala.type = MonsterType.FIRE;
-    sala.attackDesc = 'Sala burns you !!!';
+    sala.attackDescription = 'Sala burns you !!!';
     sala.attackName = 'Burns';
     sala.attackStrength = 60;
     sala.figureCaption = 'Ouch... it is hot!';
@@ -85,7 +85,7 @@ export class MonsterService {
     return this.monsters.map((m) => m.copy());
   }
 
-  get(id: number) {
+  get(id: number | undefined) {
     const match = this.monsters.find((m) => m.id === id);
     return match ? match.copy() : undefined;
   }

@@ -9,7 +9,7 @@ export class Monster {
   figureCaption = 'Default Monster figure caption';
   attackName = 'Default Attack name';
   attackStrength = 60;
-  attackDesc = 'Default Attack description';
+  attackDescription = 'Default Attack description';
 
   copy(): Monster {
     return Object.assign(new Monster(), this);

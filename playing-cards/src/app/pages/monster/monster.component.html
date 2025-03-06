@@ -1,4 +1,97 @@
-@if (monsterId()) {
-  <p>Monster ID: {{ monsterId() }}</p>
-  <button (click)="next()">Next ⏩</button>
-}
+<main>
+  <aside class="preview">
+    <app-playing-card [monster]="monster" />
+  </aside>
+  <section>
+    <form [formGroup]="form" (submit)="submit($event)">
+      <div class="form-field">
+        <label for="name">Name</label>
+        <input id="name" name="name" type="text" formControlName="name" />
+        @if (isFieldValid("name")) {
+          <p class="error">This field is required</p>
+        }
+      </div>
+      <div class="form-field">
+        <label for="hp">HP</label>
+        <input id="hp" name="hp" type="number" formControlName="hp" />
+        @if (isFieldValid("hp")) {
+          <p class="error">This field is invalid</p>
+        }
+      </div>
+      <div class="form-field">
+        <label for="type">Type</label>
+        <select id="type" name="type" type="number" formControlName="type">
+          @for (type of monsterTypes; track type) {
+            <option [value]="type">{{ type }}</option>
+          }
+        </select>
+        @if (isFieldValid("type")) {
+          <p class="error">This field is invalid</p>
+        }
+      </div>
+
+      <div class="form-field">
+        <label for="attackName">Attack Name</label>
+        <input
+          id="attackName"
+          name="attackName"
+          type="text"
+          formControlName="attackName"
+        />
+        @if (isFieldValid("attackName")) {
+          <p class="error">This field is invalid</p>
+        }
+      </div>
+      <div class="form-field">
+        <label for="attackStrength">Attack Strength</label>
+        <input
+          id="attackStrength"
+          name="attackStrength"
+          type="number"
+          formControlName="attackStrength"
+        />
+        @if (isFieldValid("attackStrength")) {
+          <p class="error">This field is invalid</p>
+        }
+      </div>
+      <div class="form-field">
+        <label for="attackDescription">Attack Description</label>
+        <input
+          id="attackDescription"
+          name="attackDescription"
+          type="text"
+          formControlName="attackDescription"
+        />
+        @if (isFieldValid("attackDescription")) {
+          <p class="error">This field is invalid</p>
+        }
+      </div>
+      <div class="form-field">
+        <label for="figureCaption">Image Caption</label>
+        <input
+          id="figureCaption"
+          name="figureCaption"
+          type="text"
+          formControlName="figureCaption"
+        />
+        @if (isFieldValid("figureCaption")) {
+          <p class="error">This field is invalid</p>
+        }
+      </div>
+      <div class="form-field">
+        <label for="image">Image</label>
+        <input
+          id="image"
+          name="image"
+          type="file"
+          (change)="onFileChange($event)"
+        />
+        @if (isFieldValid("image")) {
+          <p class="error">This field is invalid</p>
+        }
+      </div>
+      <button (click)="navigateBack()">Display List</button>
+      <button type="submit" [disabled]="form.invalid">Save</button>
+    </form>
+  </section>
+</main>
