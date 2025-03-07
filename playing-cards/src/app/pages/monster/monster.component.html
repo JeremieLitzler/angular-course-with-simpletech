@@ -4,94 +4,126 @@
   </aside>
   <section>
     <form [formGroup]="form" (submit)="submit($event)">
-      <div class="form-field">
-        <label for="name">Name</label>
-        <input id="name" name="name" type="text" formControlName="name" />
-        @if (isFieldValid("name")) {
-          <p class="error">This field is required</p>
-        }
-      </div>
-      <div class="form-field">
-        <label for="hp">HP</label>
-        <input id="hp" name="hp" type="number" formControlName="hp" />
-        @if (isFieldValid("hp")) {
-          <p class="error">This field is invalid</p>
-        }
-      </div>
-      <div class="form-field">
-        <label for="type">Type</label>
-        <select id="type" name="type" type="number" formControlName="type">
-          @for (type of monsterTypes; track type) {
-            <option [value]="type">{{ type }}</option>
-          }
-        </select>
-        @if (isFieldValid("type")) {
-          <p class="error">This field is invalid</p>
-        }
-      </div>
-
-      <div class="form-field">
-        <label for="attackName">Attack Name</label>
+      <mat-form-field>
+        <mat-label for="name">Name</mat-label>
         <input
+          matInput
+          id="name"
+          name="name"
+          type="text"
+          formControlName="name"
+        />
+        @if (isFieldValid("name")) {
+          <mat-error>This field is required</mat-error>
+        }
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label for="hp">HP</mat-label>
+        <input matInput id="hp" name="hp" type="number" formControlName="hp" />
+        @if (isFieldValid("hp")) {
+          <mat-error>This field is invalid</mat-error>
+        }
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label for="type">Type</mat-label>
+        <mat-select id="type" name="type" type="number" formControlName="type">
+          @for (type of monsterTypes; track type) {
+            <mat-option [value]="type">{{ type }}</mat-option>
+          }
+        </mat-select>
+        @if (isFieldValid("type")) {
+          <mat-error>This field is invalid</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label for="attackName">Attack Name</mat-label>
+        <input
+          matInput
           id="attackName"
           name="attackName"
           type="text"
           formControlName="attackName"
         />
         @if (isFieldValid("attackName")) {
-          <p class="error">This field is invalid</p>
+          <mat-error>This field is invalid</mat-error>
         }
-      </div>
-      <div class="form-field">
-        <label for="attackStrength">Attack Strength</label>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label for="attackStrength">Attack Strength</mat-label>
         <input
+          matInput
           id="attackStrength"
           name="attackStrength"
           type="number"
           formControlName="attackStrength"
         />
         @if (isFieldValid("attackStrength")) {
-          <p class="error">This field is invalid</p>
+          <mat-error>This field is invalid</mat-error>
         }
-      </div>
-      <div class="form-field">
-        <label for="attackDescription">Attack Description</label>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label for="attackDescription">Attack Description</mat-label>
         <input
+          matInput
           id="attackDescription"
           name="attackDescription"
           type="text"
           formControlName="attackDescription"
         />
         @if (isFieldValid("attackDescription")) {
-          <p class="error">This field is invalid</p>
+          <mat-error>This field is invalid</mat-error>
         }
-      </div>
-      <div class="form-field">
-        <label for="figureCaption">Image Caption</label>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label for="figureCaption">Image Caption</mat-label>
         <input
+          matInput
           id="figureCaption"
           name="figureCaption"
           type="text"
           formControlName="figureCaption"
         />
         @if (isFieldValid("figureCaption")) {
-          <p class="error">This field is invalid</p>
+          <mat-error>This field is invalid</mat-error>
         }
-      </div>
+      </mat-form-field>
       <div class="form-field">
-        <label for="image">Image</label>
+        <button mat-raised-button type="button" (click)="imageInput.click()">
+          {{ getUploadImageButtonLabel(imageInput) }}
+        </button>
         <input
+          #imageInput
           id="image"
           name="image"
           type="file"
+          hidden
           (change)="onFileChange($event)"
         />
         @if (isFieldValid("image")) {
           <p class="error">This field is invalid</p>
         }
       </div>
-      <button (click)="navigateBack()">Display List</button>
-      <button type="submit" [disabled]="form.invalid">Save</button>
+      <div class="form-actions">
+        <div class="form-actions-left">
+          @if (monsterId() !== -1) {
+            <button
+              mat-flat-button
+              color="warn"
+              type="button"
+              (click)="deleteMonster()"
+            >
+              Delete
+            </button>
+          }
+        </div>
+        <div class="form-actions-right">
+          <button mat-flat-button type="submit" [disabled]="form.invalid">
+            Save
+          </button>
+          <button mat-button (click)="navigateBack()">Back</button>
+        </div>
+      </div>
     </form>
   </section>
 </main>

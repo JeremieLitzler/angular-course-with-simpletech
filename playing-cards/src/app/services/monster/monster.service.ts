@@ -118,16 +118,15 @@ export class MonsterService {
     return updatedMonster;
   }
 
-  delete(id: number) {
+  delete(id: number | undefined) {
     const monsterIndex = this.monsters.findIndex(
       (originalMonster) => originalMonster.id === id,
     );
 
     if (monsterIndex !== -1) {
-      delete this.monsters[monsterIndex];
+      //delete this.monsters[monsterIndex];
+      this.monsters.splice(monsterIndex, 1);
       this._save();
-
-      // this.monsters.splice(monsterIndex, 1)
     } else {
       console.warn(
         `No monster found for id=<${id}>. Caching or UI refresh issue?`,

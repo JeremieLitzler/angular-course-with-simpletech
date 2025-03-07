@@ -6,10 +6,22 @@ import { MonsterType } from '../../utils/monster.utils';
 import { PlayingCardComponent } from '../../components/playing-card/playing-card.component';
 import { Monster } from '../../models/monster.model';
 import { MonsterService } from '../../services/monster/monster.service';
+import { MatButtonModule } from '@angular/material/button';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
+import { MatDialog } from '@angular/material/dialog';
+import { MonsterDeleteConfirmationDialogComponent } from '../../components/monster-delete-confirmation-dialog/monster-delete-confirmation-dialog.component';
 
 @Component({
   selector: 'app-monster',
-  imports: [ReactiveFormsModule, PlayingCardComponent, PlayingCardComponent],
+  imports: [
+    ReactiveFormsModule,
+    PlayingCardComponent,
+    PlayingCardComponent,
+    MatButtonModule,
+    MatInputModule,
+    MatSelectModule,
+  ],
   templateUrl: './monster.component.html',
   styleUrl: './monster.component.css',
 })
@@ -18,6 +30,7 @@ export class MonsterComponent implements OnInit, OnDestroy {
   private router = inject(Router);
   private formBuilder = inject(FormBuilder);
   private monsterService = inject(MonsterService);
+  private readonly dialog = inject(MatDialog);
 
   routeSubscription: Subscription | null = null;
   formSubscription: Subscription | null = null;
@@ -35,6 +48,14 @@ export class MonsterComponent implements OnInit, OnDestroy {
     ],
     attackDescription: ['', [Validators.required]],
   });
+  getUploadImageButtonLabel(imageInput: HTMLInputElement) {
+    const fileUploaded = imageInput.files?.[0]?.name;
+    if (fileUploaded) {
+      return `Uploaded file: ${imageInput.files?.[0]?.name}`;
+    } else {
+      return 'Upload file: ...';
+    }
+  }
 
   monsterTypes = Object.values(MonsterType);
   monsterId = signal<number | undefined>(undefined);
@@ -95,5 +116,17 @@ export class MonsterComponent implements OnInit, OnDestroy {
 
   navigateBack() {
     this.router.navigate(['/home']);
+  }
+
+  deleteMonster() {
+    const dialogRef = this.dialog.open(
+      MonsterDeleteConfirmationDialogComponent,
+    );
+    dialogRef.afterClosed().subscribe((confirmed) => {
+      if (confirmed) {
+        this.monsterService.delete(this.monsterId());
+        this.navigateBack();
+      }
+    });
   }
 }
