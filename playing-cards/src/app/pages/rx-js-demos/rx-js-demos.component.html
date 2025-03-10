@@ -1,0 +1,10 @@
+<button (click)="router.navigate(['home'])">Back home</button>
+<section>
+  <h1>Testing RxJS</h1>
+  <h2>Speakers</h2>
+  <p>{{ letter }}</p>
+  <p>{{ anotherSpeaker$ | async }}</p>
+  <h2>Input demo</h2>
+  <div><input [formControl]="textFormControl" /></div>
+  <p>{{ textTyped$ | async }}</p>
+</section>
