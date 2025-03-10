@@ -139,12 +139,14 @@ export class MonsterComponent implements OnInit, OnDestroy {
     const dialogRef = this.dialog.open(
       MonsterDeleteConfirmationDialogComponent,
     );
-    dialogRef
+    const deleteSubscription = dialogRef
       .afterClosed()
       .pipe(
         filter((confirmation) => confirmation),
         switchMap(() => this.monsterService.delete(this.monsterId())),
       )
       .subscribe(() => this.navigateBack());
+
+    this.subscriptions.add(deleteSubscription);
   }
 }
