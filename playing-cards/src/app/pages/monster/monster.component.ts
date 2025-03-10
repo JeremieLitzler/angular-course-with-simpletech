@@ -1,7 +1,7 @@
 import { Component, inject, OnDestroy, OnInit, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Subscription } from 'rxjs';
+import { filter, of, Subscription, switchMap } from 'rxjs';
 import { MonsterType } from '../../utils/monster.utils';
 import { PlayingCardComponent } from '../../components/playing-card/playing-card.component';
 import { Monster } from '../../models/monster.model';
@@ -32,8 +32,7 @@ export class MonsterComponent implements OnInit, OnDestroy {
   private monsterService = inject(MonsterService);
   private readonly dialog = inject(MatDialog);
 
-  routeSubscription: Subscription | null = null;
-  formSubscription: Subscription | null = null;
+  subscriptions: Subscription = new Subscription();
 
   form = this.formBuilder.group({
     name: ['', [Validators.required]],
@@ -62,21 +61,37 @@ export class MonsterComponent implements OnInit, OnDestroy {
   monster = Object.assign(new Monster(), this.form.value);
 
   ngOnInit(): void {
-    this.routeSubscription = this.route.params.subscribe((params) => {
-      this.monsterId.set(params['id'] ? parseInt(params['id']) : undefined);
-      const monsterFound = this.monsterService.get(this.monsterId());
-      if (monsterFound) {
-        this.monster = monsterFound;
-        this.form.patchValue(this.monster);
-      }
-    });
-    this.formSubscription = this.form.valueChanges.subscribe((data) => {
+    const routeSubscription = this.route.params
+      .pipe(
+        // `switchMap` allows to take an Observable and create another that w'll use
+        // on the next step.
+        switchMap((params) => {
+          if (params['id']) {
+            this.monsterId.set(
+              params['id'] ? parseInt(params['id']) : undefined,
+            );
+            return this.monsterService.get(this.monsterId());
+          }
+          // `of` creates an Observable with the value provided,
+          // e.g. null in the code below
+          return of(null);
+        }),
+      )
+      // receives either the result of `monsterService.get` or null
+      .subscribe((monsterFound) => {
+        if (monsterFound) {
+          this.monster = monsterFound;
+          this.form.patchValue(this.monster);
+        }
+      });
+    this.subscriptions.add(routeSubscription);
+    const formSubscription = this.form.valueChanges.subscribe((data) => {
       this.monster = Object.assign(new Monster(), data);
     });
+    this.subscriptions.add(formSubscription);
   }
   ngOnDestroy(): void {
-    this.routeSubscription?.unsubscribe();
-    this.formSubscription?.unsubscribe();
+    this.subscriptions.unsubscribe();
   }
   next() {
     let nextId = this.monsterId() || 0;
@@ -87,14 +102,16 @@ export class MonsterComponent implements OnInit, OnDestroy {
   submit(event: Event) {
     event.preventDefault();
     console.log(this.monster);
-
+    let saveObservable = null;
     if (this.monsterId() === -1 || !this.monsterId()) {
-      this.monsterService.add(this.monster);
+      saveObservable = this.monsterService.add(this.monster);
     } else {
       this.monster.id = this.monsterId() as number;
-      this.monsterService.update(this.monster);
+      saveObservable = this.monsterService.update(this.monster);
     }
-    this.router.navigate(['/home']);
+    this.subscriptions.add(
+      saveObservable.subscribe(() => this.router.navigate(['/home'])),
+    );
   }
 
   isFieldValid(fieldName: string) {
@@ -122,11 +139,12 @@ export class MonsterComponent implements OnInit, OnDestroy {
     const dialogRef = this.dialog.open(
       MonsterDeleteConfirmationDialogComponent,
     );
-    dialogRef.afterClosed().subscribe((confirmed) => {
-      if (confirmed) {
-        this.monsterService.delete(this.monsterId());
-        this.navigateBack();
-      }
-    });
+    dialogRef
+      .afterClosed()
+      .pipe(
+        filter((confirmation) => confirmation),
+        switchMap(() => this.monsterService.delete(this.monsterId())),
+      )
+      .subscribe(() => this.navigateBack());
   }
 }

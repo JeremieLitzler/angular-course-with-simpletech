@@ -4,6 +4,7 @@ import { inject, Injectable, signal } from '@angular/core';
 import { map, Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { LocalStorageDatabaseNameKeys } from '../../constants/local.storage.database.name.keys';
+import { AppConstants } from '../../constants/app.constants';
 export interface ICredentials {
   username: string;
   password: string;
@@ -18,7 +19,6 @@ export interface ILoginResult {
 })
 export class AuthService {
   private http = inject(HttpClient);
-  private BASE_URL = 'http://localhost:8000';
 
   user = signal<User | null | undefined>(undefined);
 
@@ -26,7 +26,10 @@ export class AuthService {
     console.log('authService > login > credentials', credentials);
 
     return this.http
-      .post<ILoginResult>(`${this.BASE_URL}/sessions/login/`, credentials)
+      .post<ILoginResult>(
+        `${AppConstants.API_BASE_URL}/sessions/login/`,
+        credentials,
+      )
       .pipe(
         tap((result: ILoginResult) => {
           console.log('authService > login > tap > result', result);
@@ -42,19 +45,21 @@ export class AuthService {
   }
 
   getUser(): Observable<User | null | undefined> {
-    return this.http.get<User>(`${this.BASE_URL}/sessions/me/`).pipe(
-      tap((result: User) => {
-        const user = Object.assign(new User(), result);
-        this.user.set(user);
-      }),
-      map(() => {
-        return this.user();
-      }),
-    );
+    return this.http
+      .get<User>(`${AppConstants.API_BASE_URL}/sessions/me/`)
+      .pipe(
+        tap((result: User) => {
+          const user = Object.assign(new User(), result);
+          this.user.set(user);
+        }),
+        map(() => {
+          return this.user();
+        }),
+      );
   }
 
   logout() {
-    return this.http.get(`${this.BASE_URL}/sessions/logout/`).pipe(
+    return this.http.get(`${AppConstants.API_BASE_URL}/sessions/logout/`).pipe(
       tap(() => {
         localStorage.removeItem(LocalStorageDatabaseNameKeys.SESSION_TOKEN_DB);
         this.user.set(null);

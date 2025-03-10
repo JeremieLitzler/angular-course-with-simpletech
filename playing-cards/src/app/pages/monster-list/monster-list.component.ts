@@ -1,14 +1,16 @@
-import { Component, computed, inject, model, signal } from '@angular/core';
+import { Component, computed, inject, model } from '@angular/core';
 
 import { PlayingCardComponent } from '../../components/playing-card/playing-card.component';
 import { SearchBarComponent } from '../../components/search-bar/search-bar.component';
 import { MonsterService } from '../../services/monster/monster.service';
 import { Monster } from '../../models/monster.model';
 import { Router } from '@angular/router';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { MatButton } from '@angular/material/button';
 
 @Component({
   selector: 'app-monster-list',
-  imports: [PlayingCardComponent, SearchBarComponent],
+  imports: [PlayingCardComponent, SearchBarComponent, MatButton],
   templateUrl: './monster-list.component.html',
   styleUrl: './monster-list.component.css',
 })
@@ -17,15 +19,15 @@ export class MonsterListComponent {
   router = inject(Router);
 
   // The "!" is used for what?
-  monsters = signal<Monster[]>([]);
+  monsters = toSignal(this.monsterService.getAll());
   search = model('');
 
-  filteredMonsters = computed(() =>
-    this.monsters().filter((monster) => monster.name.includes(this.search())),
+  filteredMonsters = computed(
+    () =>
+      this.monsters()?.filter((monster) =>
+        monster.name.includes(this.search()),
+      ) ?? [],
   );
-  constructor() {
-    this.monsters.set(this.monsterService.getAll());
-  }
 
   addMonster() {
     this.router.navigate(['/monster']);
