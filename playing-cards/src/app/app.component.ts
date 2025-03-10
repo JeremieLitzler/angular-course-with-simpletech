@@ -1,5 +1,10 @@
-import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { Component, inject, OnDestroy } from '@angular/core';
+import { MatButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
+import { MatToolbar } from '@angular/material/toolbar';
+import { Router, RouterOutlet } from '@angular/router';
+import { AuthService } from './services/auth/auth.service';
+import { Subscription } from 'rxjs';
 
 //@Component is a decorator
 @Component({
@@ -15,6 +20,31 @@ import { RouterOutlet } from '@angular/router';
   // The CSS styles inline with the TS code
   // styles: '',
   styleUrl: './app.component.css',
-  imports: [RouterOutlet],
+  imports: [RouterOutlet, MatToolbar, MatIcon, MatButton],
 })
-export class AppComponent {}
+export class AppComponent implements OnDestroy {
+  router = inject(Router);
+  authService = inject(AuthService);
+
+  private logoutSubscription: Subscription | null = null;
+
+  ngOnDestroy(): void {
+    this.logoutSubscription?.unsubscribe();
+  }
+
+  navigateHome() {
+    this.router.navigate(['home']);
+  }
+  navigateToLogin() {
+    this.router.navigate(['login']);
+  }
+
+  logout() {
+    this.logoutSubscription = this.authService.logout().subscribe({
+      next: () => this.navigateToLogin(),
+      error: (err) => {
+        console.error(err);
+      },
+    });
+  }
+}

@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Monster } from '../../models/monster.model';
 import { MonsterType } from '../../utils/monster.utils';
+import { LocalStorageDatabaseNameKeys } from '../../constants/local.storage.database.name.keys';
 
 @Injectable({
   //Defines the scope of the service, here it is available to all the app.
@@ -61,13 +62,15 @@ export class MonsterService {
     this.monsters.push(...[pik, car, bulb, sala]);
   }
 
-  private readonly MONSTER_DB = 'monster-db';
   private _save() {
-    localStorage.setItem(this.MONSTER_DB, JSON.stringify(this.monsters));
+    localStorage.setItem(
+      LocalStorageDatabaseNameKeys.MONSTER_DB,
+      JSON.stringify(this.monsters),
+    );
   }
 
   private _load() {
-    const data = localStorage.getItem(this.MONSTER_DB);
+    const data = localStorage.getItem(LocalStorageDatabaseNameKeys.MONSTER_DB);
 
     if (data && data !== '[]') {
       this.monsters = JSON.parse(data!).map((monsterJSON: Monster) =>
