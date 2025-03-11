@@ -1,0 +1,19 @@
+<div>
+  <input
+    [formControl]="searchTextFormControl"
+    placeholder="Rechercher un nom ou un prénom..."
+  />
+  <div>Nombre de résultats: {{ searchResultCount$ | async }}</div>
+  @if (loading) {
+    <p style="text-align: center">Loading...</p>
+  } @else {
+    <ul>
+      @for (person of searchResult$ | async; track person) {
+        <li>
+          {{ person.firstName }} {{ person.lastName }} -
+          {{ person.birthDate | date: "shortDate" : "" : "fr-FR" }}
+        </li>
+      }
+    </ul>
+  }
+</div>

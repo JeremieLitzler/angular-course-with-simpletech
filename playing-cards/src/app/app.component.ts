@@ -6,6 +6,10 @@ import { Router, RouterOutlet } from '@angular/router';
 import { AuthService } from './services/auth/auth.service';
 import { Subscription } from 'rxjs';
 
+// Import necessary modules for localization
+import { registerLocaleData } from '@angular/common';
+import localeFr from '@angular/common/locales/fr';
+
 //@Component is a decorator
 @Component({
   // the custom element to declare the component in index.html
@@ -27,6 +31,11 @@ export class AppComponent implements OnDestroy {
   authService = inject(AuthService);
 
   private logoutSubscription: Subscription | null = null;
+
+  constructor() {
+    // Register French locale data
+    registerLocaleData(localeFr);
+  }
 
   ngOnDestroy(): void {
     this.logoutSubscription?.unsubscribe();
