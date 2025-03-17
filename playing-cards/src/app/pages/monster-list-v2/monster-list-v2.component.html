@@ -1,0 +1,23 @@
+<h2>Monster list</h2>
+<p>Status: {{ monstersStatus() }}</p>
+<p>Error: {{ monstersError() }}</p>
+<p>Loading: {{ monstersIsLoading() }}</p>
+<div class="cards">
+  @for (monster of monstersWithHttpResource(); track monster) {
+    <app-playing-card [monster]="monster" />
+  } @empty {
+    <p style="text-align: center">No cards found</p>
+  }
+</div>
+<h2>Monster selection</h2>
+<select [(ngModel)]="selectedMonsterId">
+  @for (monster of monstersWithHttpResource(); track monster) {
+    <option [value]="monster.id">{{ monster.name }}</option>
+  }
+</select>
+@if (selectedMonsterResource.isLoading()) {
+  <p>Loading...</p>
+}
+@if (selectedMonsterResource.value()) {
+  <app-playing-card [monster]="selectedMonsterResource.value()" />
+}

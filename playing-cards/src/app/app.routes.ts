@@ -6,6 +6,7 @@ import { LoginComponent } from './pages/login/login.component';
 import { isLoggedInGuard } from './guards/is-logged-in.guard';
 import { RxJsDemosComponent } from './pages/rx-js-demos/rx-js-demos.component';
 import { SearchPageComponent } from './pages/search/search.component';
+import { MonsterListV2Component } from './pages/monster-list-v2/monster-list-v2.component';
 
 export const routes: Routes = [
   {
@@ -24,6 +25,11 @@ export const routes: Routes = [
   {
     path: 'home',
     component: MonsterListComponent,
+    canActivate: [isLoggedInGuard],
+  },
+  {
+    path: 'monsters-v2',
+    component: MonsterListV2Component,
     canActivate: [isLoggedInGuard],
   },
   {
