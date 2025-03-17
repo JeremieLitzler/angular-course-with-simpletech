@@ -37,10 +37,11 @@ export class MonsterWithHttpResourceService {
       () => {
         if (!id()) {
           // This prevents the case when the id is not yet set.
+          // e.g. httpResource doesn't perform an API call
           return undefined;
         }
 
-        // When it is, we can run the httpResource with the final URL.
+        // When it is, httpResource can call the final URL.
         return `${AppConstants.API_BASE_URL}/monsters/${id()}`;
       },
       {
